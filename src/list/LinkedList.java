@@ -2,16 +2,20 @@ package list;
 
 import static list.Position.*;
 
-public class LinkedList <G> implements List<G>{
+public class LinkedList<G> implements List<G> {
 
-    private static class Node <T> {
+    // static -> Pertenece a la clase y no al objeto
+    // --> variables -> variables pertenezcan a la clase LinkedList.listsCount
+    // --> Métodos --> LinkedList.getListsCount();
+    // --> Inner classes
 
+    private static class Node<T>{
         private final T data;
         private Node<T> previous;
         private Node<T> next;
 
         Node(T data){
-            this.data=data;
+            this.data = data;
         }
     }
 
@@ -19,24 +23,28 @@ public class LinkedList <G> implements List<G>{
     private Node<G> tail;
     private int size;
 
-    public LinkedList(){
-        listsCount++;
+    public LinkedList() {
+        listsCount ++;
     }
 
     private static int listsCount = 0;
 
-    public static int getListsCount() { return listsCount;}
+    public static int getListsCount(){
+        return listsCount;
+    }
 
-    public class Iterator{
 
+
+
+    public class ForwardIterator implements Iterator<G> {
         private Node<G> currentNode;
 
-        public Iterator(){
+        public ForwardIterator() {
             this.currentNode = head;
         }
 
-        public Iterator(Iterator iterator){
-            this.currentNode = iterator.currentNode;
+        public ForwardIterator(ForwardIterator iterator){
+            currentNode = iterator.currentNode;
         }
 
         public boolean hasNext(){
@@ -44,17 +52,20 @@ public class LinkedList <G> implements List<G>{
         }
 
         public G next(){
-            G data = currentNode.data;
+            G data = currentNode.data; // Noten que a pesar de que data es private, la outer class (LinkedList) tiene acceso
+            // al campo
 
             currentNode = currentNode.next;
 
             return data;
         }
 
-        Node<G> getCurrentNode(){ return currentNode;}
+        Node<G> getCurrentNode() {  // modificador de acceso se llama -> package-private
+            return currentNode;
+        }
     }
 
-    public class ReverseIterator {
+    public class ReverseIterator implements Iterator<G> {
 
         private Node<G> currentNode;
 
@@ -76,6 +87,12 @@ public class LinkedList <G> implements List<G>{
         }
     }
 
+    /**
+     * Inserts data at the end of the list
+     *
+     * @param data Data to be inserted
+     */
+    @Override
     public void add(G data) {
         Node<G> node = new Node<>(data);
 
@@ -93,6 +110,11 @@ public class LinkedList <G> implements List<G>{
         size++;
     }
 
+    /**
+     * @param index 0-index
+     * @return data in index
+     */
+    @Override
     public G get(int index) {
         Node<G> currentNode = head;
         int currentIndex = 0;
@@ -105,6 +127,7 @@ public class LinkedList <G> implements List<G>{
         return currentNode.data;
     }
 
+    @Override
     public void delete(int index) {
         Node<G> currentNode = head;
         int currentIndex = 0;
@@ -143,18 +166,17 @@ public class LinkedList <G> implements List<G>{
 
     }
 
-    public Iterator getIterator() {
-        return new Iterator();
+    @Override
+    public Iterator<G> getIterator() {
+        return new ForwardIterator();
     }
 
-    public ReverseIterator getReverseIterator() {
-        return new ReverseIterator();
-    }
-
-    public void insert(G data, Position position, Iterator it) {
+    @Override
+    public void insert(G data, Position position, Iterator<G> it) {
+        // ¿qué ofrece java para restringir los valores de position a solamente BEFORE y AFTER?
 
         Node<G> newNode = new Node<>(data);
-        Node<G> currentNode = it.getCurrentNode();
+        Node<G> currentNode =((ForwardIterator)it).getCurrentNode();
 
         if (position == AFTER) {
             newNode.next = currentNode.next;
@@ -180,8 +202,13 @@ public class LinkedList <G> implements List<G>{
         size++;
     }
 
+    @Override
     public int getSize() {
         return size;
     }
 
+    @Override
+    public ReverseIterator getReverseIterator() {
+        return new ReverseIterator();
+    }
 }
