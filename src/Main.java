@@ -16,11 +16,11 @@ public class Main {
         lista2.add(" Oriented ");
         lista2.add(" Programming ");
 
-        lista1.delete(3);
+        lista1.delete(4);
 
         System.out.println("---------------------");
 
-        System.out.println("El tamaño es:" + lista1.getSize());
+        System.out.println("El tamaño es: " + lista1.getSize());
 
         Iterator<Integer> it = lista1.getIterator();
 
@@ -33,6 +33,8 @@ public class Main {
         System.out.println("---------------------");
 
         it = lista1.getReverseIterator();
+
+
 
         while(it.hasNext()){
             int element = it.next();

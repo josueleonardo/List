@@ -1,26 +1,48 @@
 package list;
 
-public class ArrayList <H> implements List<H>{
+public class ArrayList<H> implements List<H>{
 
-    private final Object[] array;
+    private Object array[];
     private int size;
 
-    public ArrayList() {
-        array = new Object[2];
+    public ArrayList(){
+        this.array = new Object[2];
     }
 
     @Override
     public void add(H data) {
-        this.array[size++] = data;
+        if(size == array.length){
+            Object arrayAux[] = new Object[array.length + 2];
+
+            for(int i = 0; i < array.length; i++){
+                arrayAux[i] = array[i];
+            }
+
+            this.array = new Object[arrayAux.length];
+
+            for(int i = 0; i < array.length; i++){
+                array[i] = arrayAux[i];
+            }
+        }
+        this.array[size] = data;
+        size++;
     }
 
     @Override
     public H get(int index) {
-        return (H)this.array[index];
+        return (H)array[index];
     }
 
     @Override
     public void delete(int index) {
+        for (int i = index; i < size-1; i++) {
+            array[i] = array[i + 1];
+        }
+        size--;
+    }
+
+    @Override
+    public void insert(H data, Position position, Iterator<H> it) {
 
     }
 
@@ -31,16 +53,61 @@ public class ArrayList <H> implements List<H>{
 
     @Override
     public Iterator<H> getIterator() {
-        return null;
-    }
-
-    @Override
-    public void insert(H data, Position position, Iterator<H> it) {
-
+        return new ForwardIterator();
     }
 
     @Override
     public Iterator<H> getReverseIterator() {
-        return null;
+        return new ReverseIterator();
+    }
+
+    public class ForwardIterator implements Iterator<H> {
+
+        private int currentIndex;
+
+        public ForwardIterator(){
+            this.currentIndex = 0;
+        }
+
+        public ForwardIterator(int currentIndex){
+            this.currentIndex = currentIndex;
+        }
+
+        @Override
+        public boolean hasNext(){
+            return currentIndex < size;
+        }
+
+        @Override
+        public H next(){
+            H data = (H)array[currentIndex];
+            currentIndex++;
+            return data;
+        }
+    }
+
+    public class ReverseIterator implements Iterator<H>{
+
+        private int currentIntex;
+
+        public ReverseIterator(){
+            this.currentIntex = size-1;
+        }
+
+        public ReverseIterator(int currentIntex){
+            this.currentIntex = currentIntex;
+        }
+
+        @Override
+        public boolean hasNext(){
+            return currentIntex >= 0;
+        }
+
+        @Override
+        public H next(){
+            H data = (H)array[currentIntex];
+            currentIntex--;
+            return data;
+        }
     }
 }

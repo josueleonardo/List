@@ -10,6 +10,10 @@ public class LinkedList<G> implements List<G> {
     // --> Inner classes
 
     private static class Node<T>{
+        // IMPORTANTE 1:
+        // Noten que el tipo genérico G le pertenece a los OBJETOS LinkedList no a la clase, y ya que Node no le pertenece
+        // a un objeto LinkedList, entonces no comparte el significado del tipo genérico G y es necesario
+        // que se le defina un propio tipo genérico como si estuviera fuera del archivo
         private final T data;
         private Node<T> previous;
         private Node<T> next;
@@ -17,6 +21,29 @@ public class LinkedList<G> implements List<G> {
         Node(T data){
             this.data = data;
         }
+
+        // IMPORTANTE 2:
+        // Ya que Node es privado podemos eliminar los getters y los setters y utilizar sus atributos directamente
+        // ya que no puede estar expuesto a malos usos desde fuera del LinkedList por tener visibilidad privada
+        /*
+        public T getData() {
+            return data;
+        }
+        public void setData(T data) {
+            this.data = data;
+        }
+        public Node<T> getPrevious() {
+            return previous;
+        }
+        public void setPrevious(Node<T> previous) {
+            this.previous = previous;
+        }
+        public Node<T> getNext() {
+            return next;
+        }
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }*/
     }
 
     private Node<G> head;
